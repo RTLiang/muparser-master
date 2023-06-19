@@ -1,49 +1,25 @@
-/*
-
-	 _____  __ _____________ _______  ______ ___________
-	/     \|  |  \____ \__  \\_  __ \/  ___// __ \_  __ \
-   |  Y Y  \  |  /  |_> > __ \|  | \/\___ \\  ___/|  | \/
-   |__|_|  /____/|   __(____  /__|  /____  >\___  >__|
-		 \/      |__|       \/           \/     \/
-   Copyright (C) 2004 - 2022 Ingo Berg
-
-	Redistribution and use in source and binary forms, with or without modification, are permitted
-	provided that the following conditions are met:
-
-	  * Redistributions of source code must retain the above copyright notice, this list of
-		conditions and the following disclaimer.
-	  * Redistributions in binary form must reproduce the above copyright notice, this list of
-		conditions and the following disclaimer in the documentation and/or other materials provided
-		with the distribution.
-
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-	IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-	FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-	OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 
 #include "muParserError.h"
 #include <exception>
 
 #if defined(_MSC_VER)
-	#pragma warning(push)
-	#pragma warning(disable : 26812) // MSVC wants to force me te use enum classes or bother me with pointless warnings
+#pragma warning(push)
+#pragma warning(disable : 26812) // MSVC wants to force me te use enum classes or bother me with pointless warnings
 #endif
 
 namespace mu
 {
 	//------------------------------------------------------------------------------
-	const ParserErrorMsg& ParserErrorMsg::Instance()
+	// 返回 ParserErrorMsg 的实例
+	const ParserErrorMsg &ParserErrorMsg::Instance()
 	{
+		// 创建静态的 ParserErrorMsg 实例
 		static const ParserErrorMsg instance;
 		return instance;
 	}
 
 	//------------------------------------------------------------------------------
+	// 重载操作符 []，用于获取指定索引位置的错误信息
 	string_type ParserErrorMsg::operator[](unsigned a_iIdx) const
 	{
 		return (a_iIdx < m_vErrMsg.size()) ? m_vErrMsg[a_iIdx] : string_type();
@@ -51,10 +27,12 @@ namespace mu
 
 	//---------------------------------------------------------------------------
 	ParserErrorMsg::ParserErrorMsg()
-		:m_vErrMsg(0)
+		: m_vErrMsg(0)
 	{
+		// 调整 m_vErrMsg 的大小为 ecCOUNT（错误类型的数量）
 		m_vErrMsg.resize(ecCOUNT);
 
+		// 各个错误类型对应的错误信息
 		m_vErrMsg[ecUNASSIGNABLE_TOKEN] = _T("Unexpected token \"$TOK$\" found at position $POS$.");
 		m_vErrMsg[ecINTERNAL_ERROR] = _T("Internal error");
 		m_vErrMsg[ecINVALID_NAME] = _T("Invalid function-, variable- or constant name: \"$TOK$\".");
@@ -98,40 +76,38 @@ namespace mu
 
 		for (int i = 0; i < ecCOUNT; ++i)
 		{
+			// 检查错误信息是否为空
 			if (!m_vErrMsg[i].length())
 				throw std::runtime_error("Error definitions are incomplete!");
 		}
 	}
+	/* 这段代码是C++中用于构造ParserErrorMsg类的构造函数。ParserErrorMsg是一个错误信息类，用于存储与解析器相关的错误信息。
 
+	构造函数的作用是初始化m_vErrMsg向量，该向量存储了各个错误类型对应的错误信息。首先，通过调用resize(ecCOUNT) 来调整m_vErrMsg的大小，使其与错误类型的数量一致。然后，依次为各个错误类型赋值对应的错误信息。
+
+		这段代码还包含一些错误信息的定义，例如ecUNASSIGNABLE_TOKEN对应的错误信息是Unexpected token \"$TOK$\" found at position $POS$.。
+
+		最后，通过检查错误信息是否为空来确保错误信息的定义完整性。如果存在错误信息为空的情况，则抛出一个运行时错误。
+*/
 	//---------------------------------------------------------------------------
 	//
-	//  ParserError class
+	//  ParserError类
 	//
 	//---------------------------------------------------------------------------
 
-	/** \brief Default constructor. */
+	/** \brief 默认构造函数。 */
 	ParserError::ParserError()
-		:m_strMsg()
-		, m_strFormula()
-		, m_strTok()
-		, m_iPos(-1)
-		, m_iErrc(ecUNDEFINED)
-		, m_ErrMsg(ParserErrorMsg::Instance())
+		: m_strMsg(), m_strFormula(), m_strTok(), m_iPos(-1), m_iErrc(ecUNDEFINED), m_ErrMsg(ParserErrorMsg::Instance())
 	{
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief This Constructor is used for internal exceptions only.
+	/** \brief 仅用于内部异常的构造函数。
 
-	  It does not contain any information but the error code.
+	  它只包含错误代码，没有其他信息。
 	*/
 	ParserError::ParserError(EErrorCodes a_iErrc)
-		:m_strMsg()
-		, m_strFormula()
-		, m_strTok()
-		, m_iPos(-1)
-		, m_iErrc(a_iErrc)
-		, m_ErrMsg(ParserErrorMsg::Instance())
+		: m_strMsg(), m_strFormula(), m_strTok(), m_iPos(-1), m_iErrc(a_iErrc), m_ErrMsg(ParserErrorMsg::Instance())
 	{
 		m_strMsg = m_ErrMsg[m_iErrc];
 		stringstream_type stream;
@@ -141,31 +117,26 @@ namespace mu
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Construct an error from a message text. */
-	ParserError::ParserError(const string_type& sMsg)
-		:m_ErrMsg(ParserErrorMsg::Instance())
+	/** \brief 用消息文本构造错误。 */
+	ParserError::ParserError(const string_type &sMsg)
+		: m_ErrMsg(ParserErrorMsg::Instance())
 	{
 		Reset();
 		m_strMsg = sMsg;
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Construct an error object.
-		\param [in] a_iErrc the error code.
-		\param [in] sTok The token string related to this error.
-		\param [in] sExpr The expression related to the error.
-		\param [in] a_iPos the position in the expression where the error occurred.
+	/** \brief 构造一个错误对象。
+		\param [in] a_iErrc 错误代码。
+		\param [in] sTok 与该错误相关的标记字符串。
+		\param [in] sExpr 与错误相关的表达式。
+		\param [in] a_iPos 错误发生的表达式位置。
 	*/
 	ParserError::ParserError(EErrorCodes iErrc,
-		const string_type& sTok,
-		const string_type& sExpr,
-		int iPos)
-		:m_strMsg()
-		, m_strFormula(sExpr)
-		, m_strTok(sTok)
-		, m_iPos(iPos)
-		, m_iErrc(iErrc)
-		, m_ErrMsg(ParserErrorMsg::Instance())
+							 const string_type &sTok,
+							 const string_type &sExpr,
+							 int iPos)
+		: m_strMsg(), m_strFormula(sExpr), m_strTok(sTok), m_iPos(iPos), m_iErrc(iErrc), m_ErrMsg(ParserErrorMsg::Instance())
 	{
 		m_strMsg = m_ErrMsg[m_iErrc];
 		stringstream_type stream;
@@ -175,18 +146,13 @@ namespace mu
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Construct an error object.
-		\param [in] iErrc the error code.
-		\param [in] iPos the position in the expression where the error occurred.
-		\param [in] sTok The token string related to this error.
+	/** \brief 构造一个错误对象。
+		\param [in] iErrc 错误代码。
+		\param [in] iPos 错误发生的表达式位置。
+		\param [in] sTok 与该错误相关的标记字符串。
 	*/
-	ParserError::ParserError(EErrorCodes iErrc, int iPos, const string_type& sTok)
-		:m_strMsg()
-		, m_strFormula()
-		, m_strTok(sTok)
-		, m_iPos(iPos)
-		, m_iErrc(iErrc)
-		, m_ErrMsg(ParserErrorMsg::Instance())
+	ParserError::ParserError(EErrorCodes iErrc, int iPos, const string_type &sTok)
+		: m_strMsg(), m_strFormula(), m_strTok(sTok), m_iPos(iPos), m_iErrc(iErrc), m_ErrMsg(ParserErrorMsg::Instance())
 	{
 		m_strMsg = m_ErrMsg[m_iErrc];
 		stringstream_type stream;
@@ -194,20 +160,17 @@ namespace mu
 		ReplaceSubString(m_strMsg, _T("$POS$"), stream.str());
 		ReplaceSubString(m_strMsg, _T("$TOK$"), m_strTok);
 	}
-
-	//------------------------------------------------------------------------------
-	/** \brief Construct an error object.
-		\param [in] szMsg The error message text.
-		\param [in] iPos the position related to the error.
-		\param [in] sTok The token string related to this error.
+	/*
+	该程序实现了一个名为ParserError的类，用于表示解析器中的错误。它包含多个构造函数，用于不同的错误情况。构造函数根据传入的参数设置错误信息，并根据需要替换其中的占位符。
 	*/
-	ParserError::ParserError(const char_type* szMsg, int iPos, const string_type& sTok)
-		:m_strMsg(szMsg)
-		, m_strFormula()
-		, m_strTok(sTok)
-		, m_iPos(iPos)
-		, m_iErrc(ecGENERIC)
-		, m_ErrMsg(ParserErrorMsg::Instance())
+	//------------------------------------------------------------------------------
+	/** \brief 构造一个错误对象。
+	\param [in] szMsg 错误消息文本。
+	\param [in] iPos 错误相关的位置。
+	\param [in] sTok 与此错误相关的标记字符串。
+	*/
+	ParserError::ParserError(const char_type *szMsg, int iPos, const string_type &sTok)
+		: m_strMsg(szMsg), m_strFormula(), m_strTok(sTok), m_iPos(iPos), m_iErrc(ecGENERIC), m_ErrMsg(ParserErrorMsg::Instance())
 	{
 		stringstream_type stream;
 		stream << (int)m_iPos;
@@ -216,24 +179,18 @@ namespace mu
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Copy constructor. */
-	ParserError::ParserError(const ParserError& a_Obj)
-		:m_strMsg(a_Obj.m_strMsg)
-		, m_strFormula(a_Obj.m_strFormula)
-		, m_strTok(a_Obj.m_strTok)
-		, m_iPos(a_Obj.m_iPos)
-		, m_iErrc(a_Obj.m_iErrc)
-		, m_ErrMsg(ParserErrorMsg::Instance())
+	/** \brief 拷贝构造函数。 */
+	ParserError::ParserError(const ParserError &a_Obj)
+		: m_strMsg(a_Obj.m_strMsg), m_strFormula(a_Obj.m_strFormula), m_strTok(a_Obj.m_strTok), m_iPos(a_Obj.m_iPos), m_iErrc(a_Obj.m_iErrc), m_ErrMsg(ParserErrorMsg::Instance())
 	{
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Assignment operator. */
-	ParserError& ParserError::operator=(const ParserError& a_Obj)
+	/** \brief 赋值运算符。 */
+	ParserError &ParserError::operator=(const ParserError &a_Obj)
 	{
 		if (this == &a_Obj)
 			return *this;
-
 		m_strMsg = a_Obj.m_strMsg;
 		m_strFormula = a_Obj.m_strFormula;
 		m_strTok = a_Obj.m_strTok;
@@ -244,20 +201,20 @@ namespace mu
 
 	//------------------------------------------------------------------------------
 	ParserError::~ParserError()
-	{}
+	{
+	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Replace all occurrences of a substring with another string.
-		\param strFind The string that shall be replaced.
-		\param strReplaceWith The string that should be inserted instead of strFind
+	/** \brief 用另一个字符串替换源字符串中的所有出现。
+	\param strFind 应该被替换的字符串。
+	\param strReplaceWith 应该插入替代strFind的字符串。
 	*/
-	void ParserError::ReplaceSubString(string_type& strSource,
-		const string_type& strFind,
-		const string_type& strReplaceWith)
+	void ParserError::ReplaceSubString(string_type &strSource,
+									   const string_type &strFind,
+									   const string_type &strReplaceWith)
 	{
 		string_type strResult;
 		string_type::size_type iPos(0), iNext(0);
-
 		for (;;)
 		{
 			iNext = strSource.find(strFind, iPos);
@@ -274,7 +231,7 @@ namespace mu
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Reset the error object. */
+	/** \brief 重置错误对象。 */
 	void ParserError::Reset()
 	{
 		m_strMsg = _T("");
@@ -285,30 +242,38 @@ namespace mu
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Set the expression related to this error. */
-	void ParserError::SetFormula(const string_type& a_strFormula)
+	/*
+	这段C++代码定义了一个名为ParserError的类，用于表示解析器中的错误对象。代码实现了构造函数、拷贝构造函数、赋值运算符、析构函数和一些辅助函数。
+
+	ParserError类的构造函数根据给定的错误消息文本、位置和标记字符串创建一个错误对象。拷贝构造函数和赋值运算符用于复制和赋值ParserError对象。析构函数用于清理对象。ReplaceSubString函数用于在源字符串中替换所有出现的子字符串。Reset函数用于重置错误对象的成员变量。
+
+	这段代码实现了ParserError类的基本功能，用于创建、复制、赋值和重置错误对象。
+	*/
+	//------------------------------------------------------------------------------
+	/** \brief 设置与此错误相关的表达式。 */
+	void ParserError::SetFormula(const string_type &a_strFormula)
 	{
 		m_strFormula = a_strFormula;
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief gets the expression related tp this error.*/
-	const string_type& ParserError::GetExpr() const
+	/** \brief 获取与此错误相关的表达式。*/
+	const string_type &ParserError::GetExpr() const
 	{
 		return m_strFormula;
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Returns the message string for this error. */
-	const string_type& ParserError::GetMsg() const
+	/** \brief 返回此错误的消息字符串。 */
+	const string_type &ParserError::GetMsg() const
 	{
 		return m_strMsg;
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Return the formula position related to the error.
+	/** \brief 返回与错误相关的公式位置。
 
-	  If the error is not related to a distinct position this will return -1
+	如果错误与特定位置无关，则返回-1。
 	*/
 	int ParserError::GetPos() const
 	{
@@ -316,20 +281,22 @@ namespace mu
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Return string related with this token (if available). */
-	const string_type& ParserError::GetToken() const
+	/** \brief 返回与此标记相关的字符串（如果有）。 */
+	const string_type &ParserError::GetToken() const
 	{
 		return m_strTok;
 	}
 
 	//------------------------------------------------------------------------------
-	/** \brief Return the error code. */
+	/** \brief 返回错误代码。 */
 	EErrorCodes ParserError::GetCode() const
 	{
 		return m_iErrc;
 	}
 } // namespace mu
-
+/*
+这段代码实现了一个名为 ParserError 的类，该类包含了处理解析器错误的相关功能。它提供了设置和获取与错误相关的表达式、消息字符串、位置、标记和错误代码的方法。
+*/
 #if defined(_MSC_VER)
-	#pragma warning(pop)
+#pragma warning(pop)
 #endif

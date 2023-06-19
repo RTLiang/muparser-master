@@ -1,31 +1,3 @@
-/*
-
-	 _____  __ _____________ _______  ______ ___________
-	/     \|  |  \____ \__  \\_  __ \/  ___// __ \_  __ \
-   |  Y Y  \  |  /  |_> > __ \|  | \/\___ \\  ___/|  | \/
-   |__|_|  /____/|   __(____  /__|  /____  >\___  >__|
-		 \/      |__|       \/           \/     \/
-   Copyright (C) 2004 - 2022 Ingo Berg
-
-	Redistribution and use in source and binary forms, with or without modification, are permitted
-	provided that the following conditions are met:
-
-	  * Redistributions of source code must retain the above copyright notice, this list of
-		conditions and the following disclaimer.
-	  * Redistributions in binary form must reproduce the above copyright notice, this list of
-		conditions and the following disclaimer in the documentation and/or other materials provided
-		with the distribution.
-
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-	IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-	FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-	OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #include "muParserInt.h"
 
 #include <cmath>
@@ -38,40 +10,40 @@ using namespace std;
 	\brief Implementation of a parser using integer value.
 */
 
-/** \brief Namespace for mathematical applications. */
+/** \brief 数学应用的命名空间。 */
 namespace mu
 {
-	value_type ParserInt::Abs(value_type v) { return (value_type)Round(fabs((double)v)); }
-	value_type ParserInt::Sign(value_type v) { return (Round(v) < 0) ? -1 : (Round(v) > 0) ? 1 : 0; }
-	value_type ParserInt::Ite(value_type v1, value_type v2,	value_type v3) { return (Round(v1) == 1) ? Round(v2) : Round(v3); }
-	value_type ParserInt::Add(value_type v1, value_type v2) { return Round(v1) + Round(v2); }
-	value_type ParserInt::Sub(value_type v1, value_type v2) { return Round(v1) - Round(v2); }
-	value_type ParserInt::Mul(value_type v1, value_type v2) { return Round(v1) * Round(v2); }
-	value_type ParserInt::Div(value_type v1, value_type v2) { return Round(v1) / Round(v2); }
-	value_type ParserInt::Mod(value_type v1, value_type v2) { return Round(v1) % Round(v2); }
-	value_type ParserInt::Shr(value_type v1, value_type v2) { return Round(v1) >> Round(v2); }
-	value_type ParserInt::Shl(value_type v1, value_type v2) { return Round(v1) << Round(v2); }
-	value_type ParserInt::BitAnd(value_type v1, value_type v2) { return Round(v1) & Round(v2); }
-	value_type ParserInt::BitOr(value_type v1, value_type v2) { return Round(v1) | Round(v2); }
-	value_type ParserInt::And(value_type v1, value_type v2) { return Round(v1) && Round(v2); }
-	value_type ParserInt::Or(value_type v1, value_type v2) { return Round(v1) || Round(v2); }
-	value_type ParserInt::Less(value_type v1, value_type v2) { return Round(v1) < Round(v2); }
-	value_type ParserInt::Greater(value_type v1, value_type v2) { return Round(v1) > Round(v2); }
-	value_type ParserInt::LessEq(value_type v1, value_type v2) { return Round(v1) <= Round(v2); }
-	value_type ParserInt::GreaterEq(value_type v1, value_type v2) { return Round(v1) >= Round(v2); }
-	value_type ParserInt::Equal(value_type v1, value_type v2) { return Round(v1) == Round(v2); }
-	value_type ParserInt::NotEqual(value_type v1, value_type v2) { return Round(v1) != Round(v2); }
-	value_type ParserInt::Not(value_type v) { return !Round(v); }
+	value_type ParserInt::Abs(value_type v) { return (value_type)Round(fabs((double)v)); }  // 绝对值函数
+	value_type ParserInt::Sign(value_type v) { return (Round(v) < 0) ? -1 : (Round(v) > 0) ? 1 : 0; }  // 符号函数
+	value_type ParserInt::Ite(value_type v1, value_type v2, value_type v3) { return (Round(v1) == 1) ? Round(v2) : Round(v3); }  // 条件选择函数
+	value_type ParserInt::Add(value_type v1, value_type v2) { return Round(v1) + Round(v2); }  // 加法函数
+	value_type ParserInt::Sub(value_type v1, value_type v2) { return Round(v1) - Round(v2); }  // 减法函数
+	value_type ParserInt::Mul(value_type v1, value_type v2) { return Round(v1) * Round(v2); }  // 乘法函数
+	value_type ParserInt::Div(value_type v1, value_type v2) { return Round(v1) / Round(v2); }  // 除法函数
+	value_type ParserInt::Mod(value_type v1, value_type v2) { return Round(v1) % Round(v2); }  // 取模函数
+	value_type ParserInt::Shr(value_type v1, value_type v2) { return Round(v1) >> Round(v2); }  // 右移函数
+	value_type ParserInt::Shl(value_type v1, value_type v2) { return Round(v1) << Round(v2); }  // 左移函数
+	value_type ParserInt::BitAnd(value_type v1, value_type v2) { return Round(v1) & Round(v2); }  // 位与函数
+	value_type ParserInt::BitOr(value_type v1, value_type v2) { return Round(v1) | Round(v2); }  // 位或函数
+	value_type ParserInt::And(value_type v1, value_type v2) { return Round(v1) && Round(v2); }  // 逻辑与函数
+	value_type ParserInt::Or(value_type v1, value_type v2) { return Round(v1) || Round(v2); }  // 逻辑或函数
+	value_type ParserInt::Less(value_type v1, value_type v2) { return Round(v1) < Round(v2); }  // 小于函数
+	value_type ParserInt::Greater(value_type v1, value_type v2) { return Round(v1) > Round(v2); }  // 大于函数
+	value_type ParserInt::LessEq(value_type v1, value_type v2) { return Round(v1) <= Round(v2); }  // 小于等于函数
+	value_type ParserInt::GreaterEq(value_type v1, value_type v2) { return Round(v1) >= Round(v2); }  // 大于等于函数
+	value_type ParserInt::Equal(value_type v1, value_type v2) { return Round(v1) == Round(v2); }  // 等于函数
+	value_type ParserInt::NotEqual(value_type v1, value_type v2) { return Round(v1) != Round(v2); }  // 不等于函数
+	value_type ParserInt::Not(value_type v) { return !Round(v); }  // 逻辑非函数
 
 	value_type ParserInt::Pow(value_type v1, value_type v2)
 	{
-		return std::pow((double)Round(v1), (double)Round(v2));
+		return std::pow((double)Round(v1), (double)Round(v2));  // 幂函数
 	}
 
 
 	value_type ParserInt::UnaryMinus(value_type v)
 	{
-		return -Round(v);
+		return -Round(v);  // 一元减运算符
 	}
 
 
@@ -84,7 +56,7 @@ namespace mu
 		for (int i = 0; i < a_iArgc; ++i)
 			fRes += a_afArg[i];
 
-		return fRes;
+		return fRes;  // 求和函数
 	}
 
 
@@ -97,7 +69,7 @@ namespace mu
 		for (int i = 0; i < a_iArgc; ++i)
 			fRes = std::min(fRes, a_afArg[i]);
 
-		return fRes;
+		return fRes;  // 最小值函数
 	}
 
 
@@ -110,7 +82,7 @@ namespace mu
 		for (int i = 0; i < a_iArgc; ++i)
 			fRes = std::max(fRes, a_afArg[i]);
 
-		return fRes;
+		return fRes;  // 最大值函数
 	}
 
 
@@ -129,7 +101,7 @@ namespace mu
 		if (stream.fail())
 			return 0;
 
-		stringstream_type::pos_type iEnd = stream.tellg();   // Position after reading
+		stringstream_type::pos_type iEnd = stream.tellg();   // 读取后的位置
 		if (stream.fail())
 			iEnd = stream.str().length();
 
@@ -142,14 +114,12 @@ namespace mu
 	}
 
 
-	/** \brief Check a given position in the expression for the presence of
-			   a hex value.
-		\param a_szExpr Pointer to the expression string
-		\param [in/out] a_iPos Pointer to an integer value holding the current parsing
-			   position in the expression.
-		\param [out] a_fVal Pointer to the position where the detected value shall be stored.
+	/** \brief 检查表达式中的某个位置是否存在十六进制值。
+		\param a_szExpr 指向表达式字符串的指针
+		\param [in/out] a_iPos 指向整数值，保存当前解析位置
+		\param [out] a_fVal 指向将被存储检测到的值的位置。
 
-	  Hey values must be prefixed with "0x" in order to be detected properly.
+		十六进制值必须以 "0x" 作为前缀才能正确检测。
 	*/
 	int ParserInt::IsHexVal(const char_type* a_szExpr, int* a_iPos, value_type* a_fVal)
 	{
@@ -158,7 +128,7 @@ namespace mu
 
 		unsigned iVal(0);
 
-		// New code based on streams for UNICODE compliance:
+		// 基于流的新代码，以支持UNICODE:
 		stringstream_type::pos_type nPos(0);
 		stringstream_type ss(a_szExpr + 2);
 		ss >> std::hex >> iVal;
@@ -198,16 +168,16 @@ namespace mu
 	}
 
 
-	/** \brief Constructor.
+	/** \brief 构造函数。
 
-		Call ParserBase class constructor and trigger Function, Operator and Constant initialization.
+		调用 ParserBase 类的构造函数，并触发 Function、Operator 和 Constant 的初始化。
 	*/
 	ParserInt::ParserInt()
 		:ParserBase()
 	{
-		AddValIdent(IsVal);    // lowest priority
+		AddValIdent(IsVal);    // 优先级最低
 		AddValIdent(IsBinVal);
-		AddValIdent(IsHexVal); // highest priority
+		AddValIdent(IsHexVal); // 优先级最高
 
 		InitCharSets();
 		InitFun();
@@ -228,7 +198,7 @@ namespace mu
 	}
 
 
-	/** \brief Initialize the default functions. */
+	/** \brief 初始化默认函数。 */
 	void ParserInt::InitFun()
 	{
 		DefineFun(_T("sign"), Sign);
@@ -240,15 +210,15 @@ namespace mu
 	}
 
 
-	/** \brief Initialize operators. */
+	/** \brief 初始化操作符。 */
 	void ParserInt::InitOprt()
 	{
-		// disable all built in operators, not all of them useful for integer numbers
+		// 禁用所有内置操作符，不都适用于整数数字（它们不会进行四舍五入）
 		// (they don't do rounding of values)
 		EnableBuiltInOprt(false);
 
-		// Disable all built in operators, they won't work with integer numbers
-		// since they are designed for floating point numbers
+		// 禁用逻辑操作符
+		// 因为它们设计用于浮点数
 		DefineInfixOprt(_T("-"), UnaryMinus);
 		DefineInfixOprt(_T("!"), Not);
 
